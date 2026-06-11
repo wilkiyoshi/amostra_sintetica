@@ -197,6 +197,8 @@ export function renderizarGrafico(tipo) {
     default: opt = optBarras(resultado, p);
   }
   chart.setOption(opt, true);
+  // garante que o canvas acompanhe a largura real do contêiner ao trocar de tipo
+  chart.resize();
 }
 
 export function atualizarGraficos(resultado, stats, tema) {
