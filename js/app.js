@@ -1,5 +1,5 @@
 /**
- * SYNTHEA BR — orquestração da aplicação.
+ * CXSI — orquestração da aplicação.
  */
 import {
   carregarBase, base, filtrar, estatisticas,
