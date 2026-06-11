@@ -1,4 +1,4 @@
-# SYNTHEA BR — Pesquisa Quantitativa com População Sintética Georreferenciada do Brasil
+# CXSI — Pesquisa Quantitativa com População Sintética Georreferenciada do Brasil
 
 WebApp corporativo (estilo Palantir/BCG) para pesquisa quantitativa sobre uma **população sintética de 100.000 indivíduos brasileiros**, com mapa interativo, simulação de respostas por IA (Claude) e geração automática de insights estratégicos.
 

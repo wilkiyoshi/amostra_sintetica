@@ -9,7 +9,7 @@ const agora = () => new Date().toLocaleString("pt-BR");
 
 function nomeArquivo(ext) {
   const d = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
-  return `synthea-pesquisa-${d}.${ext}`;
+  return `cxsi-pesquisa-${d}.${ext}`;
 }
 
 // ---------------------------------------------------------------- Excel
@@ -17,7 +17,7 @@ export function exportarExcel({ pergunta, contexto, stats, resultado, insights, 
   const wb = XLSX.utils.book_new();
 
   const resumo = [
-    ["SYNTHEA BR — Relatório de Pesquisa Quantitativa"],
+    ["CXSI — Relatório de Pesquisa Quantitativa"],
     ["Gerado em", agora()],
     [],
     ["Pergunta", pergunta],
@@ -113,7 +113,7 @@ export function exportarPDF({ pergunta, contexto, stats, resultado, insights, te
   // capa
   doc.setFillColor(11, 15, 20); doc.rect(0, 0, W, 64, "F");
   doc.setFont("helvetica", "bold").setFontSize(22).setTextColor(41, 211, 192);
-  doc.text("SYNTHEA BR", M, 26);
+  doc.text("CXSI", M, 26);
   doc.setFontSize(13).setTextColor(230);
   doc.text("Relatório Executivo de Pesquisa Quantitativa", M, 36);
   doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(150);
@@ -179,7 +179,7 @@ export async function exportarPPTX({ pergunta, stats, resultado, insights, tema 
   // slide 1: capa
   let s = pptx.addSlide();
   s.background = { color: ESCURO };
-  s.addText("SYNTHEA BR", { x: 0.6, y: 2.2, w: 12, h: 1, fontSize: 44, bold: true, color: ACENTO, fontFace: "Arial" });
+  s.addText("CXSI", { x: 0.6, y: 2.2, w: 12, h: 1, fontSize: 44, bold: true, color: ACENTO, fontFace: "Arial" });
   s.addText("Pesquisa Quantitativa · População Sintética Georreferenciada do Brasil", { x: 0.6, y: 3.3, w: 12, h: 0.6, fontSize: 18, color: TEXTO });
   s.addText(`"${pergunta}"`, { x: 0.6, y: 4.2, w: 12, h: 1, fontSize: 16, italic: true, color: DIM });
   s.addText(agora(), { x: 0.6, y: 6.6, w: 6, h: 0.4, fontSize: 11, color: DIM });
