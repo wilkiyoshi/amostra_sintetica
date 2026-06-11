@@ -45,6 +45,9 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 
+/* o atributo [hidden] deve sempre vencer regras de display de autor */
+[hidden] { display: none !important; }
+
 body {
   font-family: "IBM Plex Sans", system-ui, sans-serif;
   background: var(--bg);
