@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthea BR — Pesquisa Quantitativa com População Sintética</title>
+  <meta name="description" content="Plataforma de pesquisa quantitativa baseada em população sintética georreferenciada do Brasil, com simulação de respostas e insights gerados por IA." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+</head>
+<body>
+  <!-- ============================== TOPBAR ============================== -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">◈</div>
+      <div class="brand-text">
+        <span class="brand-name">SYNTHEA<span class="brand-accent">BR</span></span>
+        <span class="brand-sub">População Sintética Georreferenciada · Brasil</span>
+      </div>
+    </div>
+    <div class="topbar-status" id="status-dataset">
+      <span class="pulse-dot"></span>
+      <span id="status-dataset-text">Carregando base…</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="export-group">
+        <button class="btn btn-ghost" id="btn-export-xlsx" title="Exportar Excel" disabled>XLSX</button>
+        <button class="btn btn-ghost" id="btn-export-pdf" title="Exportar PDF" disabled>PDF</button>
+        <button class="btn btn-ghost" id="btn-export-pptx" title="Exportar PowerPoint" disabled>PPTX</button>
+      </div>
+      <button class="btn btn-icon" id="btn-theme" title="Alternar tema">◐</button>
+      <button class="btn btn-icon" id="btn-settings" title="Configurações de IA">⚙</button>
+    </div>
+  </header>
+
+  <!-- ============================== LAYOUT ============================== -->
+  <main class="layout">
+
+    <!-- ------------- PAINEL ESQUERDO: PESQUISA ------------- -->
+    <aside class="panel panel-left">
+      <div class="panel-header">
+        <h2>Pesquisa</h2>
+        <span class="panel-tag">01</span>
+      </div>
+
+      <div class="panel-body">
+        <label class="field-label" for="input-question">Pergunta de pesquisa</label>
+        <textarea id="input-question" class="field-textarea" rows="4"
+          placeholder="Ex.: Qual a percepção sobre crédito imobiliário?"></textarea>
+
+        <div class="suggestions">
+          <span class="suggestions-label">Sugestões</span>
+          <button class="chip" data-q="Qual a percepção sobre crédito imobiliário?">Crédito imobiliário</button>
+          <button class="chip" data-q="Quais são os maiores desafios financeiros da sua família hoje?">Desafios financeiros</button>
+          <button class="chip" data-q="Qual a intenção de investimento nos próximos 12 meses?">Intenção de investimento</button>
+          <button class="chip" data-q="Você confia em canais 100% digitais para resolver questões bancárias complexas?">Confiança digital</button>
+        </div>
+
+        <label class="field-label" for="input-context">Contexto adicional <span class="optional">opcional</span></label>
+        <textarea id="input-context" class="field-textarea" rows="3"
+          placeholder="Ex.: Considere cenário de juros elevados e inflação persistente."></textarea>
+
+        <button class="btn btn-primary btn-block" id="btn-run">
+          <span class="btn-label">Executar Pesquisa</span>
+          <span class="btn-spinner" hidden></span>
+        </button>
+
+        <div class="ai-mode" id="ai-mode">
+          <span class="ai-mode-dot"></span>
+          <span id="ai-mode-text">Modo demonstração (sem chave de API)</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="history-block">
+          <div class="history-header">
+            <span class="field-label">Histórico de consultas</span>
+            <button class="btn-text" id="btn-clear-history">limpar</button>
+          </div>
+          <ul class="history-list" id="history-list"></ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ------------- PAINEL CENTRAL: MAPA ------------- -->
+    <section class="panel panel-center">
+      <div class="filters-bar" id="filters-bar">
+        <div class="filter">
+          <label>Região</label>
+          <select id="f-regiao" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Estado</label>
+          <select id="f-estado" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Faixa etária</label>
+          <select id="f-idade" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Estado civil</label>
+          <select id="f-civil" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Renda</label>
+          <select id="f-renda" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Escolaridade</label>
+          <select id="f-escolaridade" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Persona</label>
+          <select id="f-persona" multiple size="1"></select>
+        </div>
+        <div class="filter">
+          <label>Segmento</label>
+          <select id="f-segmento" multiple size="1"></select>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-clear-filters" title="Limpar filtros">✕ limpar</button>
+      </div>
+
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div class="map-controls">
+          <div class="map-mode" role="group" aria-label="Modo de visualização">
+            <button class="map-mode-btn active" data-mode="clusters">Clusters</button>
+            <button class="map-mode-btn" data-mode="heat">Heatmap</button>
+            <button class="map-mode-btn" data-mode="points">Pontos</button>
+          </div>
+        </div>
+        <div class="map-counter" id="map-counter">—</div>
+      </div>
+    </section>
+
+    <!-- ------------- PAINEL DIREITO: RESULTADOS ------------- -->
+    <aside class="panel panel-right">
+      <div class="panel-header">
+        <h2>Resultados</h2>
+        <span class="panel-tag">03</span>
+      </div>
+
+      <div class="panel-body" id="results-body">
+
+        <!-- Seção 1: Resumo Executivo -->
+        <section class="result-section">
+          <h3 class="section-title"><span class="section-num">S1</span> Resumo Executivo</h3>
+          <div class="kpi-grid">
+            <div class="kpi">
+              <span class="kpi-value" id="kpi-pop">—</span>
+              <span class="kpi-label">População selecionada</span>
+            </div>
+            <div class="kpi">
+              <span class="kpi-value" id="kpi-resp">—</span>
+              <span class="kpi-label">Respondentes (amostra)</span>
+            </div>
+            <div class="kpi">
+              <span class="kpi-value kpi-small" id="kpi-perfil">—</span>
+              <span class="kpi-label">Perfil predominante</span>
+            </div>
+            <div class="kpi">
+              <span class="kpi-value kpi-small" id="kpi-regiao">—</span>
+              <span class="kpi-label">Região predominante</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção 2: Pesquisa Quantitativa -->
+        <section class="result-section" id="section-quant">
+          <h3 class="section-title"><span class="section-num">S2</span> Pesquisa Quantitativa</h3>
+          <div class="placeholder" id="quant-placeholder">
+            Execute uma pesquisa para ver a distribuição de respostas da população sintética.
+          </div>
+          <div id="quant-results" hidden>
+            <p class="quant-question" id="quant-question"></p>
+            <div class="dist-list" id="dist-list"></div>
+            <div class="chart-tabs" id="chart-tabs">
+              <button class="chart-tab active" data-chart="bar">Barras</button>
+              <button class="chart-tab" data-chart="pie">Pizza</button>
+              <button class="chart-tab" data-chart="hist">Histograma</button>
+              <button class="chart-tab" data-chart="treemap">Treemap</button>
+              <button class="chart-tab" data-chart="geo">Geografia</button>
+            </div>
+            <div class="chart-box" id="chart-main"></div>
+            <p class="quant-summary" id="quant-summary"></p>
+          </div>
+        </section>
+
+        <!-- Seção 3: Insights de IA -->
+        <section class="result-section" id="section-insights">
+          <h3 class="section-title"><span class="section-num">S3</span> Insights Gerados por IA</h3>
+          <div class="placeholder" id="insights-placeholder">
+            Os insights estratégicos aparecem aqui após a execução da pesquisa.
+          </div>
+          <div id="insights-results" hidden>
+            <div class="insight-block">
+              <h4>▸ Principais insights</h4>
+              <ol class="insight-list" id="ins-principais"></ol>
+            </div>
+            <div class="insight-block">
+              <h4>▸ Oportunidades</h4>
+              <ul class="insight-list" id="ins-oportunidades"></ul>
+            </div>
+            <div class="insight-block">
+              <h4>▸ Riscos</h4>
+              <ul class="insight-list" id="ins-riscos"></ul>
+            </div>
+            <div class="insight-block">
+              <h4>▸ Recomendações</h4>
+              <ul class="insight-list" id="ins-recomendacoes"></ul>
+            </div>
+            <div class="insight-block narrative-block">
+              <h4>▸ Narrativa executiva</h4>
+              <p id="ins-narrativa"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ============================== MODAL: CONFIGURAÇÕES ============================== -->
+  <div class="modal-backdrop" id="modal-settings" hidden>
+    <div class="modal" role="dialog" aria-labelledby="settings-title">
+      <div class="modal-header">
+        <h3 id="settings-title">Configuração de IA</h3>
+        <button class="btn btn-icon" id="btn-close-settings">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-note">
+          A chave da API Anthropic é armazenada <strong>apenas no seu navegador</strong>
+          (localStorage) e enviada diretamente para <code>api.anthropic.com</code>.
+          Nunca é publicada nem compartilhada com o GitHub Pages.
+        </p>
+        <label class="field-label" for="input-apikey">Chave da API Anthropic</label>
+        <div class="apikey-row">
+          <input type="password" id="input-apikey" class="field-input" placeholder="sk-ant-..." autocomplete="off" />
+          <button class="btn btn-icon" id="btn-toggle-key" title="Mostrar/ocultar">👁</button>
+        </div>
+        <label class="field-label" for="select-model">Modelo</label>
+        <select id="select-model" class="field-input">
+          <option value="claude-opus-4-8" selected>Claude Opus 4.8 (recomendado)</option>
+          <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+          <option value="claude-haiku-4-5">Claude Haiku 4.5</option>
+        </select>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="btn-save-key">Salvar chave</button>
+          <button class="btn btn-danger" id="btn-delete-key">Excluir chave</button>
+        </div>
+        <p class="modal-hint" id="key-status">Nenhuma chave configurada — a aplicação funciona em modo demonstração com simulação estatística local.</p>
+        <div class="divider"></div>
+        <label class="field-label">Cache de consultas</label>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="btn-clear-cache">Limpar cache de respostas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== TOAST ============================== -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
