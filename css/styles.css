@@ -235,27 +235,6 @@ body {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.suggestions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.suggestions-label {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-right: 2px;
-}
-.chip {
-  font-size: 11px;
-  background: var(--bg-elev);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  border-radius: 99px;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.chip:hover { border-color: var(--accent); color: var(--accent); }
-
 .ai-mode {
   display: flex;
   align-items: center;

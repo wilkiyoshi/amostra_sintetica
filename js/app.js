@@ -358,11 +358,6 @@ async function init() {
     });
   });
 
-  // sugestões de pergunta
-  document.querySelectorAll(".chip").forEach((c) => {
-    c.addEventListener("click", () => ($("input-question").value = c.dataset.q));
-  });
-
   $("btn-run").addEventListener("click", aoExecutar);
   $("input-question").addEventListener("keydown", (e) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) aoExecutar();
