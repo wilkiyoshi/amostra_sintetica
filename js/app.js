@@ -3,7 +3,7 @@
  */
 import {
   carregarBase, base, filtrar, estatisticas,
-  REGIOES, UF_NOME, FAIXAS_ETARIAS, FAIXAS_RENDA,
+  REGIOES, UF_NOME, UF_REGIAO, FAIXAS_ETARIAS, FAIXAS_RENDA,
 } from "./data.js";
 import { initMapa, renderizar as renderizarMapa, definirModo, aplicarTemaMapa } from "./map.js";
 import { atualizarGraficos, renderizarGrafico, aplicarTemaGraficos, redimensionar } from "./charts.js";
@@ -49,10 +49,27 @@ function preencherSelect(id, opcoes) {
     .join("");
 }
 
+/** (Re)monta o select de estados limitando às regiões selecionadas; preserva seleções ainda válidas. */
+function atualizarEstadosPorRegiao() {
+  const sel = $("f-estado");
+  const regioesSel = new Set(Array.from($("f-regiao").selectedOptions).map((o) => o.value));
+  const selecionados = new Set(Array.from(sel.selectedOptions).map((o) => o.value));
+
+  const ufs = Object.keys(UF_NOME).sort().filter((uf) => regioesSel.size === 0 || regioesSel.has(UF_REGIAO[uf]));
+  preencherSelect("f-estado", ufs.map((uf) => ({ valor: uf, rotulo: `${uf} — ${UF_NOME[uf]}` })));
+
+  // reaplica seleções que continuam pertencendo às regiões filtradas
+  let aindaSelecionado = false;
+  Array.from(sel.options).forEach((o) => {
+    if (selecionados.has(o.value)) { o.selected = true; aindaSelecionado = true; }
+  });
+  sel.classList.toggle("has-selection", aindaSelecionado);
+}
+
 function montarFiltros() {
   const c = base().catalogos;
   preencherSelect("f-regiao", REGIOES.map((r) => ({ valor: r, rotulo: r })));
-  preencherSelect("f-estado", Object.keys(UF_NOME).sort().map((uf) => ({ valor: uf, rotulo: `${uf} — ${UF_NOME[uf]}` })));
+  atualizarEstadosPorRegiao();
   preencherSelect("f-idade", FAIXAS_ETARIAS.map((f, i) => ({ valor: i, rotulo: f.rotulo })));
   preencherSelect("f-civil", c.estados_civis.map((e, i) => ({ valor: i, rotulo: e })));
   preencherSelect("f-renda", FAIXAS_RENDA.map((f, i) => ({ valor: i, rotulo: f.rotulo })));
@@ -62,6 +79,8 @@ function montarFiltros() {
 
   document.querySelectorAll(".filter select").forEach((sel) => {
     sel.addEventListener("change", () => {
+      // ao mudar a região, restringe os estados disponíveis antes de filtrar
+      if (sel.id === "f-regiao") atualizarEstadosPorRegiao();
       sel.classList.toggle("has-selection", sel.selectedOptions.length > 0);
       aoMudarFiltros();
     });
@@ -72,6 +91,7 @@ function montarFiltros() {
       Array.from(sel.options).forEach((o) => (o.selected = false));
       sel.classList.remove("has-selection");
     });
+    atualizarEstadosPorRegiao(); // repõe a lista completa de estados
     aoMudarFiltros();
   });
 }
