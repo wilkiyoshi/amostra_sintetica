@@ -87,7 +87,7 @@ export function exportarPDF({ pergunta, contexto, stats, resultado, insights, te
   };
   const titulo = (txt) => {
     quebra(12);
-    doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(13, 148, 136);
+    doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(236, 112, 0);
     doc.text(txt, M, y); y += 7;
     doc.setTextColor(40);
   };
@@ -111,8 +111,8 @@ export function exportarPDF({ pergunta, contexto, stats, resultado, insights, te
   };
 
   // capa
-  doc.setFillColor(11, 15, 20); doc.rect(0, 0, W, 64, "F");
-  doc.setFont("helvetica", "bold").setFontSize(22).setTextColor(41, 211, 192);
+  doc.setFillColor(6, 18, 31); doc.rect(0, 0, W, 64, "F");
+  doc.setFont("helvetica", "bold").setFontSize(22).setTextColor(236, 112, 0);
   doc.text("CXSI", M, 26);
   doc.setFontSize(13).setTextColor(230);
   doc.text("Relatório Executivo de Pesquisa Quantitativa", M, 36);
@@ -174,7 +174,7 @@ export async function exportarPPTX({ pergunta, stats, resultado, insights, tema 
   pptx.defineLayout({ name: "WIDE", width: 13.33, height: 7.5 });
   pptx.layout = "WIDE";
 
-  const ESCURO = "0B0F14", ACENTO = "29D3C0", TEXTO = "E6ECF2", DIM = "8B9BAB";
+  const ESCURO = "06121F", ACENTO = "EC7000", TEXTO = "E9EEF5", DIM = "93A5BA";
 
   // slide 1: capa
   let s = pptx.addSlide();
@@ -196,7 +196,7 @@ export async function exportarPPTX({ pergunta, stats, resultado, insights, tema 
   ];
   kpis.forEach(([valor, rotulo], i) => {
     const x = 0.6 + (i % 2) * 6.2, yy = 1.5 + Math.floor(i / 2) * 1.7;
-    s.addShape(pptx.ShapeType.roundRect, { x, y: yy, w: 5.9, h: 1.45, fill: { color: "161D26" }, line: { color: "2C3A4D" }, rectRadius: 0.08 });
+    s.addShape(pptx.ShapeType.roundRect, { x, y: yy, w: 5.9, h: 1.45, fill: { color: "102742" }, line: { color: "25496E" }, rectRadius: 0.08 });
     s.addText(valor, { x: x + 0.25, y: yy + 0.12, w: 5.4, h: 0.7, fontSize: 22, bold: true, color: ACENTO });
     s.addText(rotulo.toUpperCase(), { x: x + 0.25, y: yy + 0.85, w: 5.4, h: 0.4, fontSize: 10, color: DIM });
   });

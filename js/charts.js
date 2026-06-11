@@ -6,7 +6,7 @@ let chart = null;
 let estadoAtual = null; // { resultado, stats, tema }
 let tipoAtivo = "bar";
 
-const CORES = ["#29d3c0", "#f2b441", "#e35d6a", "#6ea8fe", "#b07ce8", "#4fc37e", "#f08a4b", "#8b9bab"];
+const CORES = ["#ec7000", "#2f6fb1", "#ffa64d", "#7ba7d4", "#a14a00", "#4fc37e", "#e35d6a", "#93a5ba"];
 
 function paleta(tema) {
   const escuro = tema === "dark";

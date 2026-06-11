@@ -89,7 +89,7 @@ export function renderizar(indices) {
     });
     heatLayer = L.heatLayer(pts, {
       radius: 16, blur: 22, maxZoom: 11, minOpacity: 0.25,
-      gradient: { 0.2: "#155e75", 0.45: "#0d9488", 0.65: "#29d3c0", 0.85: "#f2b441", 1: "#e35d6a" },
+      gradient: { 0.2: "#1d4e89", 0.45: "#5ba8ff", 0.65: "#ffa64d", 0.85: "#ec7000", 1: "#c2333f" },
     }).addTo(map);
     return;
   }
@@ -100,7 +100,7 @@ export function renderizar(indices) {
     for (const i of amostra) {
       const [lat, lng] = coordenadas(i);
       const m = L.circleMarker([lat, lng], {
-        radius: 3.5, weight: 1, color: "#29d3c0", fillColor: "#29d3c0", fillOpacity: 0.55,
+        radius: 3.5, weight: 1, color: "#ec7000", fillColor: "#ec7000", fillOpacity: 0.55,
       });
       m.bindPopup(() => popupHtml(i), { maxWidth: 320 });
       pointsLayer.addLayer(m);
@@ -133,7 +133,7 @@ export function renderizar(indices) {
     const i = amostra[k];
     const [lat, lng] = coordenadas(i);
     const m = L.circleMarker([lat, lng], {
-      radius: 4, weight: 1, color: "#29d3c0", fillColor: "#29d3c0", fillOpacity: 0.6,
+      radius: 4, weight: 1, color: "#ec7000", fillColor: "#ec7000", fillOpacity: 0.6,
     });
     m.bindPopup(() => popupHtml(i), { maxWidth: 320 });
     markers[k] = m;

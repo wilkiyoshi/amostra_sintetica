@@ -1,21 +1,22 @@
 /* ================================================================
-   SYNTHEA BR — design system corporativo (estilo Palantir/BCG)
+   CXSI — design system corporativo (paleta Itaú)
    ================================================================ */
 
+/* Paleta institucional Itaú: laranja #EC7000 sobre azul-marinho profundo */
 :root,
 [data-theme="dark"] {
-  --bg: #0b0f14;
-  --bg-panel: #11161d;
-  --bg-elev: #161d26;
-  --bg-input: #0d1219;
-  --border: #1f2937;
-  --border-strong: #2c3a4d;
-  --text: #e6ecf2;
-  --text-dim: #8b9bab;
-  --text-faint: #5b6b7b;
-  --accent: #29d3c0;
-  --accent-soft: rgba(41, 211, 192, 0.12);
-  --accent-2: #f2b441;
+  --bg: #06121f;
+  --bg-panel: #0a1c30;
+  --bg-elev: #102742;
+  --bg-input: #081726;
+  --border: #16304d;
+  --border-strong: #25496e;
+  --text: #e9eef5;
+  --text-dim: #93a5ba;
+  --text-faint: #5e7390;
+  --accent: #ec7000;
+  --accent-soft: rgba(236, 112, 0, 0.15);
+  --accent-2: #5ba8ff;
   --danger: #e35d6a;
   --ok: #4fc37e;
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
@@ -24,21 +25,21 @@
 }
 
 [data-theme="light"] {
-  --bg: #eef1f4;
+  --bg: #f2f4f7;
   --bg-panel: #ffffff;
-  --bg-elev: #f5f7f9;
+  --bg-elev: #f6f8fa;
   --bg-input: #f0f3f6;
-  --border: #d8dee5;
-  --border-strong: #b9c4cf;
-  --text: #16212c;
-  --text-dim: #50616f;
+  --border: #dde3ea;
+  --border-strong: #bdc9d6;
+  --text: #102a43;
+  --text-dim: #4e6275;
   --text-faint: #8595a3;
-  --accent: #0d9488;
-  --accent-soft: rgba(13, 148, 136, 0.10);
-  --accent-2: #b97e0e;
+  --accent: #ec7000;
+  --accent-soft: rgba(236, 112, 0, 0.10);
+  --accent-2: #00529b;
   --danger: #c2333f;
   --ok: #1f8a4d;
-  --shadow: 0 8px 24px rgba(20, 35, 50, 0.12);
+  --shadow: 0 8px 24px rgba(16, 42, 67, 0.12);
   color-scheme: light;
 }
 
@@ -130,11 +131,11 @@ body {
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #06241f;
+  color: #ffffff;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
-.btn-primary:hover:not(:disabled) { filter: brightness(1.1); color: #06241f; }
+.btn-primary:hover:not(:disabled) { filter: brightness(1.1); color: #ffffff; }
 
 .btn-ghost { background: transparent; }
 .btn-danger { border-color: var(--danger); color: var(--danger); background: transparent; }
@@ -156,7 +157,7 @@ body {
   width: 13px; height: 13px;
   margin-left: 8px;
   border: 2px solid rgba(0,0,0,0.25);
-  border-top-color: #06241f;
+  border-top-color: #ffffff;
   border-radius: 50%;
   vertical-align: -2px;
   animation: spin 0.7s linear infinite;
@@ -164,19 +165,21 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ============================== LAYOUT 3 PAINÉIS ============================== */
+/* ordem visual: mapa (45%) | pesquisa (25%) | resultados (30%) */
 .layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 25% 45% 30%;
+  grid-template-columns: 45% 25% 30%;
   min-height: 0;
 }
 
 .panel { display: flex; flex-direction: column; min-height: 0; background: var(--bg-panel); }
 /* o mapa (#map) é position:absolute e pintaria acima do conteúdo estático dos
-   painéis vizinhos; os painéis laterais ganham contexto de empilhamento acima dele */
-.panel-left  { border-right: 1px solid var(--border); position: relative; z-index: 2; }
-.panel-right { border-left: 1px solid var(--border); position: relative; z-index: 2; }
-.panel-center { background: var(--bg); position: relative; z-index: 1; }
+   painéis vizinhos; os painéis de pesquisa/resultados ganham contexto de
+   empilhamento acima dele */
+.panel-left  { order: 2; border-left: 1px solid var(--border); position: relative; z-index: 2; }
+.panel-right { order: 3; border-left: 1px solid var(--border); position: relative; z-index: 2; }
+.panel-center { order: 1; background: var(--bg); position: relative; z-index: 1; }
 
 .panel-header {
   display: flex;
@@ -326,7 +329,7 @@ body {
   cursor: pointer;
 }
 .map-mode-btn + .map-mode-btn { border-left: 1px solid var(--border); }
-.map-mode-btn.active { background: var(--accent); color: #06241f; font-weight: 600; }
+.map-mode-btn.active { background: var(--accent); color: #ffffff; font-weight: 600; }
 
 .map-counter {
   position: absolute;
@@ -389,14 +392,14 @@ body {
 
 .cluster-icon {
   background: var(--accent);
-  color: #06241f;
+  color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: "IBM Plex Mono", monospace;
   font-weight: 600;
-  border: 3px solid rgba(41, 211, 192, 0.3);
+  border: 3px solid rgba(236, 112, 0, 0.3);
   background-clip: padding-box;
 }
 
@@ -485,7 +488,7 @@ body {
 }
 .dist-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: linear-gradient(90deg, #ec7000, #ffa64d);
   border-radius: 3px;
   transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -602,7 +605,7 @@ body {
 
 /* ============================== RESPONSIVO ============================== */
 @media (max-width: 1280px) {
-  .layout { grid-template-columns: 28% 42% 30%; }
+  .layout { grid-template-columns: 42% 28% 30%; }
 }
 @media (max-width: 1024px) {
   body { overflow: auto; }
