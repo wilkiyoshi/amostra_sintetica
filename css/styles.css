@@ -2,28 +2,8 @@
    CXSI — design system corporativo (paleta Itaú)
    ================================================================ */
 
-/* Paleta institucional Itaú: laranja #EC7000 sobre azul-marinho profundo */
+/* Paleta institucional Itaú: laranja #EC7000; tema claro como padrão */
 :root,
-[data-theme="dark"] {
-  --bg: #06121f;
-  --bg-panel: #0a1c30;
-  --bg-elev: #102742;
-  --bg-input: #081726;
-  --border: #16304d;
-  --border-strong: #25496e;
-  --text: #e9eef5;
-  --text-dim: #93a5ba;
-  --text-faint: #5e7390;
-  --accent: #ec7000;
-  --accent-soft: rgba(236, 112, 0, 0.15);
-  --accent-2: #5ba8ff;
-  --danger: #e35d6a;
-  --ok: #4fc37e;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-  --map-filter: none;
-  color-scheme: dark;
-}
-
 [data-theme="light"] {
   --bg: #f2f4f7;
   --bg-panel: #ffffff;
@@ -40,7 +20,27 @@
   --danger: #c2333f;
   --ok: #1f8a4d;
   --shadow: 0 8px 24px rgba(16, 42, 67, 0.12);
+  --map-filter: none;
   color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #06121f;
+  --bg-panel: #0a1c30;
+  --bg-elev: #102742;
+  --bg-input: #081726;
+  --border: #16304d;
+  --border-strong: #25496e;
+  --text: #e9eef5;
+  --text-dim: #93a5ba;
+  --text-faint: #5e7390;
+  --accent: #ec7000;
+  --accent-soft: rgba(236, 112, 0, 0.15);
+  --accent-2: #5ba8ff;
+  --danger: #e35d6a;
+  --ok: #4fc37e;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }

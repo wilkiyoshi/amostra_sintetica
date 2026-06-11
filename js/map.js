@@ -27,12 +27,12 @@ export function initMapa(tema) {
     preferCanvas: true,
     worldCopyJump: false,
   });
-  tileLayer = L.tileLayer(TILES[tema] || TILES.dark, { attribution: ATTR, maxZoom: 19 }).addTo(map);
+  tileLayer = L.tileLayer(TILES[tema] || TILES.light, { attribution: ATTR, maxZoom: 19 }).addTo(map);
   return map;
 }
 
 export function aplicarTemaMapa(tema) {
-  if (tileLayer) tileLayer.setUrl(TILES[tema] || TILES.dark);
+  if (tileLayer) tileLayer.setUrl(TILES[tema] || TILES.light);
 }
 
 export function definirModo(novoModo) {

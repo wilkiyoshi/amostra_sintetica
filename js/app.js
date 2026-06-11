@@ -326,7 +326,7 @@ function montarModal() {
 
 // ================================================================ inicialização
 async function init() {
-  const temaSalvo = localStorage.getItem(LS_TEMA) || "dark";
+  const temaSalvo = localStorage.getItem(LS_TEMA) || "light";
   document.documentElement.dataset.theme = temaSalvo;
 
   initMapa(temaSalvo);
