@@ -11,7 +11,7 @@ import { individuo, amostrar, REGIOES } from "./data.js";
 const LS_KEY = "synthea.apikey";
 const LS_MODEL = "synthea.model";
 const CACHE_PREFIX = "synthea.cache.";
-const SDK_URL = "https://esm.sh/@anthropic-ai/sdk@0.78.0";
+const SDK_URL = "https://esm.sh/@anthropic-ai/sdk@0.88.0";
 const TAMANHO_AMOSTRA = 400;   // respondentes simulados
 const AMOSTRA_CONTEXTO = 80;   // indivíduos enviados em detalhe ao LLM
 
