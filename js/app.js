@@ -5,7 +5,7 @@ import {
   carregarBase, base, filtrar, estatisticas,
   REGIOES, UF_NOME, UF_REGIAO, FAIXAS_ETARIAS, FAIXAS_RENDA,
 } from "./data.js";
-import { initMapa, renderizar as renderizarMapa, definirModo, aplicarTemaMapa } from "./map.js";
+import { initMapa, renderizar as renderizarMapa, definirModo, aplicarTemaMapa, invalidarTamanho } from "./map.js";
 import { atualizarGraficos, renderizarGrafico, aplicarTemaGraficos, redimensionar } from "./charts.js";
 import {
   executarPesquisa, temChave, obterChave, salvarChave, excluirChave,
@@ -378,7 +378,9 @@ async function init() {
     try { await exportarPPTX(dadosExport()); } catch (e) { toast("Erro no export PPTX: " + e.message, true); }
   });
 
-  window.addEventListener("resize", redimensionar);
+  window.addEventListener("resize", () => { redimensionar(); invalidarTamanho(); });
+  // o mapa pode ter sido medido antes do layout final; revalida ao concluir a carga
+  window.addEventListener("load", invalidarTamanho);
 
   // carga da base
   try {
@@ -388,6 +390,7 @@ async function init() {
     document.querySelector(".pulse-dot").classList.add("ready");
     montarFiltros();
     aoMudarFiltros();
+    invalidarTamanho();
   } catch (e) {
     console.error(e);
     $("status-dataset-text").textContent = "Falha ao carregar a base de dados";

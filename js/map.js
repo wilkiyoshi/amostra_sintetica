@@ -28,7 +28,18 @@ export function initMapa(tema) {
     worldCopyJump: false,
   });
   tileLayer = L.tileLayer(TILES[tema] || TILES.light, { attribution: ATTR, maxZoom: 19 }).addTo(map);
+  // o mapa pode ser criado antes do grid/fontes assentarem (agravado pelo uso
+  // de `order` no layout); recalcula o tamanho após o reflow para os tiles não
+  // ficarem fora do lugar
+  invalidarTamanho();
   return map;
+}
+
+/** Recalcula as dimensões do mapa (corrige tiles deslocados após mudanças de layout). */
+export function invalidarTamanho() {
+  if (!map) return;
+  requestAnimationFrame(() => map.invalidateSize());
+  setTimeout(() => map.invalidateSize(), 300);
 }
 
 export function aplicarTemaMapa(tema) {
